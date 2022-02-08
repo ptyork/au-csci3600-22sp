@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>JS TEST PAGE</title>
+
+  <!-- CAN GO HERE OR BELOW -->
+  <script src="funcs.js"></script>
+  <!-- CAN GO HERE OR BELOW -->
+  <!-- (as long as it is included before you CALL any of the funcs) -->
+
+  <script>
+    var app = function(text) {
+      appendSelector('#printHere', text);
+    };
+
+    // var val;
+    var val = 0;
+    var add = function(num) {
+      // let newVal = val + num;
+      let newVal = val + Number(num);
+      app(val + ' + ' + num + ' = ' + newVal);
+      app('val is a ' + typeof(val));
+      app('num is a ' + typeof(num));
+      val = newVal;
+    }
+
+  </script>
+
+</head>
+<body>
+
+  <h1>This is a page!!</h1>
+
+  <div id="printHere"></div>
+
+  <script src="test.js"></script>
+  <script>
+    // alert("HELP I'VE FALLEN AND I CAN'T GET UP!!");
+    print("This is a test print message.");
+
+    // alert();
+
+    // var elem = document.getElementById("printHere");
+    // elem.innerHTML = "I got set dynamically";
+
+    // alert();
+
+    // elem = document.querySelector("#printHere");
+    // elem.innerHTML = "Yeah, whatever, I overwrote you!"
+
+    printSelector('#printHere', 'HERE FINALLY IS SOME TEXT');
+
+    appendSelector('#printHere', 'MOAR TEXT GO HARRRRR');
+
+    app("TESTING A");
+    app(app);
+    app(appendSelector);
+
+
+    add(5);
+    add(10);
+    add("20");
+    add(30);
+
+    let b1 = "A" == 'A'; // true
+    app(b1);
+    let b2 = "A" == 'a'; // false
+    app(b2);
+    let b3 = "5" == 5; // true!?!?!
+    app(b3);
+    let b4 = "true" == true; // false
+    app(b4);
+    let b5 = "5" === 5; // false (three equals)
+    app(b5);
+
+    let len = val.length;
+    app("val is " + len + ' characters long');
+
+    //add("boogers");
+
+    len = "abcde".length;
+    app("abcde is " + len + ' characters long');
+
+    app(`HELLO WORLD`);
+    app(`1 + 1 = ${1+1}`);
+
+
+  </script>
+
+</body>
+</html>
