@@ -72,7 +72,7 @@
   <!-- +++++++++++++++++++++++++++++ -->
   <!-- ARRAYS                        -->
   <!-- +++++++++++++++++++++++++++++ -->
-  <!-- <script>
+  <script>
     var myarray = ["a",12,"booger"];
 
     $p(myarray[2]);
@@ -119,12 +119,12 @@
       $p(`(arrow function) ${v}`);
     } );
 
-  </script> -->
+  </script>
 
   <!-- +++++++++++++++++++++++++++++ -->
   <!-- OBJECTS                       -->
   <!-- +++++++++++++++++++++++++++++ -->
-  <!-- <script>
+  <script>
     let paul = {
       "firstName": "Paul",
       "lastName": "York",
@@ -218,20 +218,20 @@
 
     $p(JSON.stringify(paul));
 
-  </script> -->
+  </script>
 
   <!-- +++++++++++++++++++++++++++++ -->
   <!-- DOM STUFF                     -->
   <!-- +++++++++++++++++++++++++++++ -->
   <script>
-    let favorites = [
+    let favBookStrings = [
       'The Fellowship of the Ring',
       'The Two Towers',
       'The Return of the King',
       'The Hobbit'
     ];
 
-    let favBooks = [
+    let favBookObjects = [
       {title:"The Fellowship of the Ring", author:"Tolkein", year:1954},
       {title:"The Two Towers", author:"Tolkein", year:1954},
       {title:"The Return of the King", author:"Tolkein", year:1955},
@@ -240,21 +240,21 @@
       {title:"A Clash of Kings", author:"Martin", year:1999},
     ];
 
-    let favelem = document.querySelector('#favorites');
-    let notfavelem = document.querySelector('#notfavs');
+    let favElement = document.querySelector('#favorites');
+    let notFavElement = document.querySelector('#notfavs');
 
-    for (let e of favelem.children) {
+    for (let e of favElement.children) {
       $p(e.innerText);
     }
 
-    favelem.innerHTML = "";
+    favElement.innerHTML = "";
 
     let odd = true;
-    for (let fav of favorites) {
+    for (let fav of favBookStrings) {
       let li = document.createElement("li");
       li.innerHTML = fav;
-      favelem.appendChild(li);
-      notfavelem.appendChild(li); // MOVE THE ELEMENT
+      favElement.appendChild(li);
+      notFavElement.appendChild(li); // MOVE THE ELEMENT
       $p(odd);
       if (!odd) {
         // let fg = li.style.color;
@@ -281,10 +281,10 @@
 
     // });
     
-    for (let book of favBooks) {
+    for (let book of favBookObjects) {
       let li = document.createElement("li");
       li.innerHTML = `${book.title.toUpperCase()} (${book.year}), by ${book.author}`;
-      favelem.appendChild(li);
+      favElement.appendChild(li);
     }
 
     let currSortOrder = 0; // 0 is title, 1 is year, 2 is author
@@ -296,7 +296,13 @@
         currSortOrder = 0;
       }
       if (currSortOrder == 0) {
-        favBooks.sort(function (booka, bookb) {
+        // I MISPOKE IN THE VIDEOS:
+        //  For the array sort method, we are asked to write a function to
+        //  compare ANY TWO ELEMENTS. The return value should be as follows:
+        //   if a > b return a number > 0
+        //   if a == b return 0 (we don't do this...no biggie, though)
+        //   if a < b return a number < 0
+        favBookObjects.sort(function (booka, bookb) {
           if (booka.title > bookb.title) {
             return 1;
           } else {
@@ -305,7 +311,7 @@
         });
         fh.innerHTML = "Favorite Books (by title)";
       } else if (currSortOrder == 1) {
-        favBooks.sort(function (booka, bookb) {
+        favBookObjects.sort(function (booka, bookb) {
           if (booka.year > bookb.year) {
             return 1;
           } else {
@@ -314,7 +320,7 @@
         });
         fh.innerHTML = "Favorite Books (by year)";
       } else {
-        favBooks.sort(function (booka, bookb) {
+        favBookObjects.sort(function (booka, bookb) {
           if (booka.author > bookb.author) {
             return 1;
           } else {
@@ -323,13 +329,13 @@
         });
         fh.innerHTML = "Favorite Books (by author)";
       }
-      favelem.innerHTML = "";
-      for (let book of favBooks) {
+      favElement.innerHTML = "";
+      for (let book of favBookObjects) {
         let li = document.createElement("li");
         li.innerHTML = `${book.title.toUpperCase()} (${book.year}), by ${book.author}`;
-        favelem.appendChild(li);
+        favElement.appendChild(li);
       }
-    })
+    });
 
   </script>
 
