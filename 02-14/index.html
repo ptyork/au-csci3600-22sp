@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DOM TEST PAGE</title>
+
+  <style>
+    #outputPanel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 20vh;
+      background-color: #333;
+      color: yellowgreen;
+      font-size: 1.2rem;
+      font-weight: 500;
+      font-family: Consolas, 'Roboto Mono', 'Courier New', Courier, monospace;
+      padding-left: 3rem;
+      border: 2px solid crimson;
+      overflow: auto;
+    }
+    #outputPanel::before {
+      position: fixed;
+      left: 0;
+      height: 20vh;
+      padding: 0 .25rem;
+      color: white;
+      font-weight: 800;
+      background-color: crimson;
+      content: 'OUTPUT';
+      text-align: center;
+      vertical-align: text-bottom;
+      writing-mode: vertical-rl;
+    }
+  </style>
+
+  <script src="funcs.js"></script>
+  <script>
+    var $p = function(text) {
+      appendToSelector('#outputPanel', text);
+    };
+  </script>
+
+  <script>
+    // document.onreadystatechange = function () {
+    //   let title = document.querySelector("h1");
+    //   title.innerHTML = "The Document Object Model is DYNAMIC!!";
+    // };
+    document.addEventListener("readystatechange", function () {
+      let title = document.querySelector("h1");
+      title.innerHTML = "The Document Object Model is DYNAMIC!!";
+    });
+  </script>
+
+</head>
+<body>
+  <div id="outputPanel"></div>
+
+  <h1>The Document Object Model is AWESOME!!</h1>
+
+  <h2 id="favhead">Favorites</h2>
+  <ul id="favorites">
+    <li>The Fellowship of the Ring</li>
+    <li>The Two Towers</li>
+  </ul>
+
+  <h2>Not Favorites</h2>
+  <ul id="notfavs"></ul>
+  
+
+  <!-- +++++++++++++++++++++++++++++ -->
+  <!-- ARRAYS                        -->
+  <!-- +++++++++++++++++++++++++++++ -->
+  <!-- <script>
+    var myarray = ["a",12,"booger"];
+
+    $p(myarray[2]);
+    myarray[2] = "snot";
+    $p(myarray[2]);
+    
+    $p("The array contains:");
+    for (let i = 0; i < myarray.length; i++) {
+      let val = myarray[i];
+      //val = "BOOOM";
+      //myarray[i] = "BOOMER";
+      $p(val);
+    }
+    $p("The array contains (for/of):");
+    for (let val of myarray) {
+      $p("for/of " + val);
+    }
+    $p("The array contains (for/in NOT for Arrays):");
+    for (let val in myarray) {
+      $p("for/in " + val);
+    }
+    $p("The array contains (forEach):");
+    function pval(v) {
+      $p("(pval) " + v);
+    }
+    var pval2 = function(v,i) {
+      //$p("(pval2) " + i + ") " + v);
+      $p(`(pval2) ${i}) ${v}`);
+    }
+    //pval("BOOM");
+    myarray.forEach(pval)
+    myarray.forEach(pval2)
+
+    // myarray.forEach(
+    //   function (v) {
+    //     $p(`(inline function) ${v}`);
+    //   }
+    // );
+    myarray.forEach( function (v) {
+      $p(`(inline function) ${v}`);
+    } );
+
+    myarray.forEach( (v) => {
+      $p(`(arrow function) ${v}`);
+    } );
+
+  </script> -->
+
+  <!-- +++++++++++++++++++++++++++++ -->
+  <!-- OBJECTS                       -->
+  <!-- +++++++++++++++++++++++++++++ -->
+  <!-- <script>
+    let paul = {
+      "firstName": "Paul",
+      "lastName": "York",
+      "hairColor": "White & Balding",
+      "height": 69,
+      "1": "boogers", // bad index/property name
+      "favorite snack": "Jelly Beans"  // bad index/property name
+    };
+
+    // can also (should) use non-quoted propoerty name
+    let mike = {
+      firstName: "Mike",
+      lastName: "Dowell",
+      hairColor: "Salt & Peppa",
+      height: 71,
+    }
+
+    // access using indexes
+    $p(`First Name: ${paul["firstName"]}`);
+    $p(`Last Name: ${paul["lastName"]}`);
+    $p(`1: ${paul["1"]}`);
+
+    // access using dot notation
+    $p(`First Name: ${paul.firstName}`);
+    $p(`Last Name: ${paul.lastName}`);
+    $p(`1: ${paul.favor}`);
+
+
+    $p(typeof mike);
+    $p(mike);
+    let mikestring = JSON.stringify(mike);
+    $p(mikestring);
+
+
+    let mike2 = JSON.parse(mikestring);
+    $p(mike2.firstName);
+    mike2.firstName = "Michael";
+    $p(JSON.stringify(mike));
+    $p(JSON.stringify(mike2));
+
+    let mike3 = mike;
+    mike3.firstName = "Bad-Joke-Mike";
+    $p(JSON.stringify(mike));
+    $p(JSON.stringify(mike3));
+
+    paul.preferredHand = "right";
+    paul["preferredBrain"] = "left";
+    $p(`Paul's Preferred Hand: ${paul.preferredHand}`);
+    $p(`Paul's Preferred Brain: ${paul.preferredBrain}`);
+
+    paul.favoriteBooks = [];
+    paul.favoriteBooks.push('The Fellowship of the Ring');
+    paul.favoriteBooks.push('The Hobbit');
+
+    $p("Paul's Favorite Books");
+    for (let book of paul.favoriteBooks) {
+      $p(book);
+    }
+
+    $p(JSON.stringify(paul));
+
+    paul.degrees = {};
+    paul.degrees.undergraduate = {
+      degreeName: "BBA",
+      institution: "UGA"
+    };
+    paul.degrees.doctorate = {
+      degreeName: "PhD",
+      institution: "UGA"
+    };
+    paul.degrees.masters = {
+      degreeName: "MSCS",
+      institution: "GT"
+    };
+
+    $p(`Paul's Masters Degree is: ${paul.degrees.masters.degreeName} from ${paul.degrees.masters.institution}`);
+
+    paul.dogs = [];
+    paul.dogs.push(
+      {name: "Guiness", breed: "Goldendoodle"},
+      {name: "Stella", breed: "Goldendoodle"},
+      {name: "Shiraz", breed: "Australian Shepherd"}
+    );
+
+    $p("Paul's Dogs");
+    for (let dog of paul.dogs) {
+      $p(`Dog Name: ${dog.name}`);
+      $p(`Dog Breed: ${dog.breed}`);
+      $p('=======');
+    }
+
+    $p(JSON.stringify(paul));
+
+  </script> -->
+
+  <!-- +++++++++++++++++++++++++++++ -->
+  <!-- DOM STUFF                     -->
+  <!-- +++++++++++++++++++++++++++++ -->
+  <script>
+    let favorites = [
+      'The Fellowship of the Ring',
+      'The Two Towers',
+      'The Return of the King',
+      'The Hobbit'
+    ];
+
+    let favBooks = [
+      {title:"The Fellowship of the Ring", author:"Tolkein", year:1954},
+      {title:"The Two Towers", author:"Tolkein", year:1954},
+      {title:"The Return of the King", author:"Tolkein", year:1955},
+      {title:"The Hobbit", author:"Tolkein", year:1937},
+      {title:"A Game of Thrones", author:"Martin", year:1996},
+      {title:"A Clash of Kings", author:"Martin", year:1999},
+    ];
+
+    let favelem = document.querySelector('#favorites');
+    let notfavelem = document.querySelector('#notfavs');
+
+    for (let e of favelem.children) {
+      $p(e.innerText);
+    }
+
+    favelem.innerHTML = "";
+
+    let odd = true;
+    for (let fav of favorites) {
+      let li = document.createElement("li");
+      li.innerHTML = fav;
+      favelem.appendChild(li);
+      notfavelem.appendChild(li); // MOVE THE ELEMENT
+      $p(odd);
+      if (!odd) {
+        // let fg = li.style.color;
+        // $p(fg);
+        // let bg = li.style.backgroundColor;
+        // $p(bg);
+        li.style.color = 'navy';
+        li.style.backgroundColor = 'yellow';
+      }
+      odd = !odd;
+    }
+
+    let h1 = document.querySelector("h1");
+    h1.onclick = function() {
+      if (h1.innerText === "WOOT!!!") {
+        h1.innerText = "WOOF!!!"
+      } else {
+        h1.innerText = "WOOT!!!"
+      }
+    }
+
+
+    // favBooks.forEach((book) => {
+
+    // });
+    
+    for (let book of favBooks) {
+      let li = document.createElement("li");
+      li.innerHTML = `${book.title.toUpperCase()} (${book.year}), by ${book.author}`;
+      favelem.appendChild(li);
+    }
+
+    let currSortOrder = 0; // 0 is title, 1 is year, 2 is author
+    
+    var fh = document.querySelector('#favhead');
+    fh.addEventListener('click', function() {
+      currSortOrder++;
+      if (currSortOrder > 2) {
+        currSortOrder = 0;
+      }
+      if (currSortOrder == 0) {
+        favBooks.sort(function (booka, bookb) {
+          if (booka.title > bookb.title) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+        fh.innerHTML = "Favorite Books (by title)";
+      } else if (currSortOrder == 1) {
+        favBooks.sort(function (booka, bookb) {
+          if (booka.year > bookb.year) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+        fh.innerHTML = "Favorite Books (by year)";
+      } else {
+        favBooks.sort(function (booka, bookb) {
+          if (booka.author > bookb.author) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+        fh.innerHTML = "Favorite Books (by author)";
+      }
+      favelem.innerHTML = "";
+      for (let book of favBooks) {
+        let li = document.createElement("li");
+        li.innerHTML = `${book.title.toUpperCase()} (${book.year}), by ${book.author}`;
+        favelem.appendChild(li);
+      }
+    })
+
+  </script>
+
+</body>
+</html>
