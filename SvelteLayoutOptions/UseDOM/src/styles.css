@@ -1,0 +1,36 @@
+body {
+    background-color: slateblue;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+#wrapper {
+    width: 90vw;
+    max-width: 1000px;
+    margin: 10px auto;
+}
+header, nav, main, footer {
+    padding: 5px 10px;
+}
+header {
+    background-color: black;
+    border-radius: 10px 10px 0 0;
+}
+h1,h2 {
+    margin:0;
+}
+nav {
+    background-color: darkolivegreen;
+}
+main {
+    background-color: darkslateblue;
+}
+footer {
+    background-color: black;
+    border-radius: 0 0 10px 10px;
+}
+nav a {
+    color: palegreen;
+    text-decoration: none;
+    font-weight: bold;
+}
