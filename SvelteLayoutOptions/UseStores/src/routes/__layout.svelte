@@ -1,23 +1,21 @@
 <script>
     import '../styles.css';
-
-    // import the heading value from the store
+    // Import the heading value from the store (use it below)
     import { heading } from "$lib/pageStore.js";
 
-    // now "subscribe" to changes to this value. Whenever the value
-    // changes, the arrow function is called, which will change the
-    // headingValue to the new value of the heading store.
-    // That value is used in the <h2>...</h2> below.
-	let headingValue = "CAN'T READ HEADING FROM STORE";
-	heading.subscribe((value) => {
-		headingValue = value;
-	});
+    // NOTE: We are going to use the "auto-subscribe" capabilities to
+    // avoid having to "subscribe" or "get" the value of the store.
+    // Instead we reference the value with {$heading}. There's some
+    // "magic code" behind the scenes that basically gets the value
+    // stored in a store (STORENAME) and sets it automatically to a
+    // $-prefixed variable of the same name ($STORENAME).
 </script>
 
 <div id="wrapper">
     <header id="top">
         <h1>My Site!!</h1>
-        <h2>{headingValue}</h2>
+        <!-- And here you just reference the value using the $ prefix. -->
+        <h2>{$heading}</h2>
     </header>
     <nav>
         <a href="#top">LINK 1</a>
