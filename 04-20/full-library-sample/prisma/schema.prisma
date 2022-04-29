@@ -1,0 +1,103 @@
+/////////////////////////////////////////////////////////////////////////
+// This file was generated automatically for me when I installed Prisma.
+//
+//   npm install prisma --save-dev
+//   npx prisma init
+//
+// I then edited the .env file to change to use a SQLite file.
+// Likewise I edited the "provider" below.
+// Next I added models (also below).
+//
+/////////////////////////////////////////////////////////////////////////
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["cockroachdb"]
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+/////////////////////////////////////////////////////////////////////////
+//
+// Describe a really simple one Author to many Books data model.
+// Can be much more involved:
+//   https://www.prisma.io/docs/concepts/components/prisma-schema/data-model
+//
+// Once defined you need to generate BOTH the database AND the associated
+// TypeScript files.
+//   https://www.prisma.io/docs/guides/database/developing-with-prisma-migrate
+//   https://www.prisma.io/docs/concepts/components/prisma-client
+//
+// Basically:
+//   npx prisma migrate dev         (will ask for a name...whatever you want)
+//
+//   npm install @prisma/client     (only need to do this once)
+//   npx prisma generate
+//
+/////////////////////////////////////////////////////////////////////////
+
+model Author {
+  authorId    Int     @id @default(autoincrement())
+  firstName   String?
+  lastName    String
+  yearOfBirth Int
+  yearOfDeath Int?
+  books       Book[]
+}
+
+model Book {
+  bookId      Int        @id @default(autoincrement())
+  title       String
+  yearWritten Int?
+  edition     String?
+  price       Float?
+  picURL      String?
+  author      Author     @relation(references: [authorId], fields: [authorId])
+  authorId    Int
+  copies      BookCopy[]
+}
+
+model BookCopy {
+  copyId      String       @id @default(cuid())
+  dateAdded   DateTime     @default(now())
+  isAvailable Boolean      @default(true)
+  book        Book         @relation(references: [bookId], fields: [bookId])
+  bookId      Int
+  borrows     BookBorrow[]
+}
+
+model BookBorrow {
+  borrowId Int      @id @default(autoincrement())
+  borrowDate DateTime @default(now())
+  returnDate DateTime?
+  lateFee Decimal @db.Decimal(7,2)
+  lateFeePaidDate DateTime?
+  bookCopy BookCopy @relation(fields: [copyId], references: [copyId])
+  copyId   String
+  patron Patron @relation(fields: [patronId], references: [patronId])
+  patronId   String
+}
+
+enum ContactType {
+  EMAIL
+  MOBILE
+}
+
+model Patron {
+  patronId  String @id @default(cuid())
+  userName  String @unique
+  firstName String @db.VarChar(50)
+  lastName  String @db.VarChar(50)
+  emailAddress String @db.VarChar(100)
+  mobileNumber String @db.VarChar(20)
+  preferredContact ContactType @default(EMAIL)
+  isActive  Boolean @default(true)
+  canBorrow Boolean @default(true)
+  borrows BookBorrow[]
+}
