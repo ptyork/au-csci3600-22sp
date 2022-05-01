@@ -320,7 +320,7 @@
       <div class="col-md-4">
         <label for="confirmPassword" class="form-label">Confirm Password</label>
         <!-- NO NAME ATTRIBUTE SINCE THIS WILL NOT BE SUBMITTED TO THE SEVER -->
-        <input id="email" type="password" class="form-control"
+        <input id="confirmPassword" type="password" class="form-control"
                maxlength="20"
                bind:value={confirmPassword}>
       </div>

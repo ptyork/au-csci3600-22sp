@@ -1,47 +1,48 @@
-/*
-  Adapted from:
-  https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_stores
-  
-  Modified to use sessionStorage AND to handle default values when "hydrating" on the server, since
-  sessionStoage is not available there.
-*/
-
 import { writable } from 'svelte/store';
 import { browser } from '$app/env';
 
-export const sessionStore = (key:string, initial:any) => {      // receives the key of the local storage and an initial value
+export const sessionStore = (key:string, initialValue:any) => {
 
-  if (browser) {
-    if (sessionStorage.getItem(key) === null) {                   // item not present in local storage
-      sessionStorage.setItem(key, JSON.stringify(initial));       // initialize local storage with initial value
-    }
-  }
+  let initialJSON = JSON.stringify(initialValue);
 
-  let saved = initial;
+  let savedValue = initialValue;
+  let savedJSON = initialJSON;
+
   if (browser) {
     try {
-      saved = JSON.parse(sessionStorage.getItem(key) as string)   // convert to object
+      savedJSON = sessionStorage.getItem(key) as string;
+
+      if (savedJSON == null) {
+        sessionStorage.setItem(key, initialJSON);
+        savedJSON = initialJSON;
+      } else {
+        savedValue = JSON.parse(savedJSON);
+      }
     } catch {
-      console.warn(`Error reading saved value ${key} from sessionState`);
+      console.warn(`Error reading saved value ${key} from sessionStorage`);
     }
   }
 
-  const { subscribe, set, update } = writable(saved)              // create the underlying writable store
+  const { subscribe, set, update } = writable(savedValue)
 
   return {
     subscribe,
-    set: (value:any) => {
-      saved = value;
+    set: (newValue:any) => {
+      savedValue = newValue;
+      savedJSON = JSON.stringify(savedValue);
       if (browser) {
-        sessionStorage.setItem(key, JSON.stringify(saved))
+        sessionStorage.setItem(key, savedJSON);
       }
-      set(value)
+      set(newValue)
     },
     get: () => {
-      return saved;
+      return savedValue;
+    },
+    hasValue: () => {
+      return savedJSON !== initialJSON;
     },
     clear: () => {
-      set({});
+      set(initialValue);
     },
     update
   }

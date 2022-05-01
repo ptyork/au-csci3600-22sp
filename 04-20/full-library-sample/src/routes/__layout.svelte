@@ -15,24 +15,27 @@
   let avatarUrl;
 
   $: {
-    console.log($user);
+    console.debug($user);
 
     // Get the URL for hte avatar image whenver the isAuthenticated store value
     // changes. The whole process of generating the "Gravatar" url is very likely
     // unnecessary since I think Auth0 actually just gives it to you. But it is
     // a good demonstration of HOW to do "calculated" values when another,
     // related field changes.
+    // UPDATE: Removed since it wasn't needed. Replaced with a call to
+    // an online avatar generator.
     if ($isAuthenticated) {
-      console.log($user);
+      console.debug($user);
       avatarUrl = $user.picture;
-      // if it's null but the user has an email, generate a "Gravatar" URl
-      // to get the avatar image
-      if (!avatarUrl && $user.email) {
-        const address = $user.email.trim().toLowerCase();
-        const hash = md5(address);
-        avatarUrl = `https://www.gravatar.com/avatar/${ hash }`;
+
+      if (!avatarUrl && $user.given_name) {
+        // const address = $user.email.trim().toLowerCase();
+        // const hash = md5(address);
+        // avatarUrl = `https://www.gravatar.com/avatar/${ hash }`;
+        let name = encodeURI($user.given_name + ' ' + $user.family_name);
+        avatarUrl = `https://ui-avatars.com/api/?name=${name}`;
       }
-      console.log('avatarUrl: ', avatarUrl);
+      console.debug('avatarUrl: ', avatarUrl);
     }
   }
 
@@ -53,6 +56,12 @@
   function setDarkMode() {
     darkmode.setDarkMode(inDarkMode);
   }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // NOT FUN ADMIN MODE SWITCH (since I couldn't figure out Auth0 Roles)
+  //////////////////////////////////////////////////////////////////////////////
+
+  let adminMode = true;
 
   //////////////////////////////////////////////////////////////////////////////
   // SVELTE ONMOUNT
@@ -84,20 +93,33 @@
         -->
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/testform">Test</a></li>
-        <li class="nav-item"><a class="nav-link" href="/">Browse</a></li>
-        {#if $isAuthenticated}
-        <li class="nav-item"><a class="nav-link" href="/">View Borrowed Books</a></li>
-        <li class="nav-item"><a class="nav-link" href="/">Return Book</a></li>
-        {:else}
+        <li class="nav-item"><a class="nav-link" href="/authors">Browse</a></li>
+        {#if $isAuthenticated && adminMode}
+        <li class="nav-item bg-secondary"><a class="nav-link" href="/admin/authors">Book Inventory</a></li>
+        {:else if !$isAuthenticated}
         <li class="nav-item"><span class="nav-link" role="button" on:click={login}>Login</span></li>
         {/if}
       </ul>
       {#if $isAuthenticated}
       <div class="dropdown d-flex" style="margin-left:1rem;">
-        <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <img src={avatarUrl} alt={$user.name} height="45" referrerpolicy="no-referrer" />
-        </a>
+        </span>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+          <li class="dropdown-item"><a class="nav-link" href="/mybooks">Borrowed Books</a></li>
+          <li class="dropdown-item"><a class="nav-link" href="/profile">User Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <div class="user-mode-toggle">
+              <label for="userMode" class="form-check-label">PATRON</label>
+              <div class="form-check form-check-inline form-switch">
+                <input id="userMode" type="checkbox" role="switch" class="form-check-input"
+                      bind:checked={adminMode}>
+                <label for="userMode" class="form-check-label">ADMIN</label>
+              </div>
+            </div>
+          </li>
+          <li><hr class="dropdown-divider"></li>
           <li>
             <div class="dark-mode-toggle">
               <label for="darkMode" class="form-check-label">LIGHT</label>

@@ -44,20 +44,21 @@ datasource db {
 
 model Author {
   authorId    Int     @id @default(autoincrement())
-  firstName   String?
-  lastName    String
+  firstName   String? @db.VarChar(50)
+  lastName    String  @db.VarChar(50)
   yearOfBirth Int
   yearOfDeath Int?
+  picURL      String? @db.VarChar(200)
   books       Book[]
 }
 
 model Book {
   bookId      Int        @id @default(autoincrement())
-  title       String
+  title       String     @db.VarChar(200)
   yearWritten Int?
-  edition     String?
+  edition     String?    @db.VarChar(50)
   price       Float?
-  picURL      String?
+  picURL      String?    @db.VarChar(200)
   author      Author     @relation(references: [authorId], fields: [authorId])
   authorId    Int
   copies      BookCopy[]
@@ -73,15 +74,16 @@ model BookCopy {
 }
 
 model BookBorrow {
-  borrowId Int      @id @default(autoincrement())
-  borrowDate DateTime @default(now())
-  returnDate DateTime?
-  lateFee Decimal @db.Decimal(7,2)
+  borrowId        Int       @id @default(autoincrement())
+  borrowDate      DateTime  @default(now())
+  dueDate         DateTime
+  returnDate      DateTime?
+  lateFee         Decimal?  @db.Decimal(6, 2)
   lateFeePaidDate DateTime?
-  bookCopy BookCopy @relation(fields: [copyId], references: [copyId])
-  copyId   String
-  patron Patron @relation(fields: [patronId], references: [patronId])
-  patronId   String
+  bookCopy        BookCopy  @relation(fields: [copyId], references: [copyId])
+  copyId          String
+  patron          Patron    @relation(fields: [patronId], references: [patronId])
+  patronId        String
 }
 
 enum ContactType {
@@ -90,14 +92,14 @@ enum ContactType {
 }
 
 model Patron {
-  patronId  String @id @default(cuid())
-  userName  String @unique
-  firstName String @db.VarChar(50)
-  lastName  String @db.VarChar(50)
-  emailAddress String @db.VarChar(100)
-  mobileNumber String @db.VarChar(20)
-  preferredContact ContactType @default(EMAIL)
-  isActive  Boolean @default(true)
-  canBorrow Boolean @default(true)
-  borrows BookBorrow[]
+  patronId         String       @id @default(cuid())
+  userName         String       @unique
+  firstName        String       @db.VarChar(50)
+  lastName         String       @db.VarChar(50)
+  emailAddress     String       @db.VarChar(100)
+  mobileNumber     String?      @db.VarChar(20)
+  preferredContact ContactType  @default(EMAIL)
+  isActive         Boolean      @default(true)
+  canBorrow        Boolean      @default(true)
+  borrows          BookBorrow[]
 }
